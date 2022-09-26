@@ -10,7 +10,7 @@ class Brand(models.Model):
 
 class Model(models.Model):
     name = models.CharField("Модель", max_length=100)
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, verbose_name="Марка")
 
     def __str__(self):
         return self.name
@@ -49,12 +49,12 @@ class Product(models.Model):
     price = models.DecimalField("Цена", max_digits=10, decimal_places=2)
     description = models.TextField("Описание")
     amount = models.IntegerField("Количество")
-    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.PROTECT)
-    contractor = models.ForeignKey(Contractor, on_delete=models.PROTECT)
-    brand = models.ForeignKey(Brand, on_delete=models.PROTECT)
-    model = models.ForeignKey(Model, on_delete=models.PROTECT)
+    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.PROTECT, verbose_name="Производитель")
+    contractor = models.ForeignKey(Contractor, on_delete=models.PROTECT, verbose_name="Поставщик")
+    brand = models.ForeignKey(Brand, on_delete=models.PROTECT, verbose_name="Марка")
+    model = models.ForeignKey(Model, on_delete=models.PROTECT, verbose_name="Модель")
     foto = models.ImageField(upload_to="photos/", blank=True, verbose_name="Фото")
-    category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, verbose_name="Категория")
 
     def __str__(self):
         return self.name
@@ -68,7 +68,7 @@ class Client(models.Model):
     email = models.EmailField(unique=True)
 
     def __str__(self):
-        return self.name
+        return self.first_name
 
 
 class Order(models.Model):
@@ -76,13 +76,13 @@ class Order(models.Model):
     date_order = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return self.client
 
 
 class Order_Item(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, verbose_name="Товар")
     amount = models.IntegerField("Количество")
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name="Заказ")
 
     def __str__(self):
-        return self.name
+        return self.order

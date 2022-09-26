@@ -1,0 +1,19 @@
+{% extends 'base/templ.html' %}
+
+{% block content %}
+<form action="{% url 'home' %}" method="post">
+    <ul class="list-product">
+		{% for el in product %}
+			<li>
+				<h2>{{el.name}}</h2>
+				<p>{{el.article}}</p>
+				<p>{{el.description|linebreaks|truncatewords:25}}</p>
+				<p>{{el.price}} руб.</p>
+				<p>{{el.foto}}</p>
+				<div class="clear"></div>
+				<p class="link-read-post"><a href="{% url 'product' el.id %}">Открыть</a></p>
+			</li>
+		{% endfor %}
+	</ul>
+</form>
+{% endblock %}

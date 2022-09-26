@@ -1,7 +1,35 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+
+import base.views
+from .models import *
+from django.views.generic import *
+
+menu = [{'title': "Главная", 'upl_name': "home"},
+        {'title': "О нас", 'upl_name': "about"},
+        {'title': "Войти", 'upl_name': "login"}
+        ]
 
 
-def home(reqest):
-    return HttpResponse("zkkzkz")
+class homelist(ListView):
+    model = Product
+    template_name = 'base/home.html'
+    context_object_name = 'product'
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['menu'] = menu
+        context['title'] = 'AvtoW'
+        context['selected'] = 0
+        return context
+
+
+class detailproduct(DetailView):
+    pass
+
+
+def about(request):
+    return render(request, 'base/about.html', {'menu': menu, 'title': 'О сайте'})
+
+
+def login(request):
+    return render(request, 'base/login.html', {'menu': menu, 'title': 'О сайте'})
