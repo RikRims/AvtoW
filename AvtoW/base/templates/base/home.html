@@ -7,11 +7,15 @@
 			<li>
 				<h2>{{el.name}}</h2>
 				<p>{{el.article}}</p>
+				{% autoescape on %}
 				<p>{{el.description|linebreaks|truncatewords:25}}</p>
+				{% endautoescape %}
 				<p>{{el.price}} руб.</p>
-				<p>{{el.foto}}</p>
+				{% if foto %}
+					<p><img class="img-article-left" src="{{foto.url}}"></p>
+				{% endif %}
 				<div class="clear"></div>
-				<p class="link-read-post"><a href="{% url 'product' el.id %}">Открыть</a></p>
+				<p class="link-read-post"><a href="{{ el.get_absolute_url }}">Открыть</a></p>
 			</li>
 		{% endfor %}
 	</ul>

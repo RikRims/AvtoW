@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 class Brand(models.Model):
@@ -37,15 +38,20 @@ class Manufacturer(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField("Наименование", max_length=150)
+    name = models.CharField("Наименование", max_length=150, db_index=True)
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL", null=True)
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('select', kwargs={'cat_slag': self.slug})
 
 
 class Product(models.Model):
     article = models.SlugField("Артикул", unique=True)
     name = models.CharField("Наименование", max_length=150)
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL", null=True)
     price = models.DecimalField("Цена", max_digits=10, decimal_places=2)
     description = models.TextField("Описание")
     amount = models.IntegerField("Количество")
@@ -58,6 +64,9 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('product', kwargs={'product_id': self.pk})
 
 
 class Client(models.Model):

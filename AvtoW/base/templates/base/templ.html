@@ -1,4 +1,5 @@
 {% load static %}
+{% load base_tags %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,12 +34,12 @@
 <!-- Sidebar слева -->
 	<td valign="top" class="left-chapters">
 	<ul id="leftchapters">
-		<li class="selected">Все категории</li>
-		<li><a href="#">Колеса</a></li>
-		<li><a href="#">Кузов</a></li>
-		<li><a href="#">Стекла</a></li>
-        <li><a href="#">Свет</a></li>
-        <li><a href="#">Электроника</a></li>
+		{% if selected == 0 %}
+			<li class="selected">Все категории</li>
+		{% else %}
+			<li><a href="{% url 'home' %}">Все категории</a></li>
+		{% endif %}
+		{% show_categories selected=selected %}
 	</ul>
 </td>
 <!-- Конец Sidebar'а -->

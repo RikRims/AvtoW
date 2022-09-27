@@ -1,0 +1,15 @@
+{% extends 'base/templ.html' %}
+
+{% block content %}
+<form action="{% url 'home' %}" method="post">
+    <ul class="list-product">
+		<li>
+			<h1>{{name}}</h1>
+			{% if foto %}
+				<p><img class="img-article-left" src="{{foto.url}}"></p>
+			{% endif %}
+			<p>{{description|linebreaks}}</p>
+		</li>
+	</ul>
+</form>
+{% endblock %}
