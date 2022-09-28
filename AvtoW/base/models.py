@@ -8,6 +8,10 @@ class Brand(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Марки"
+        verbose_name_plural = "Марки"
+
 
 class Model(models.Model):
     name = models.CharField("Модель", max_length=100)
@@ -15,6 +19,10 @@ class Model(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "Модели"
+        verbose_name_plural = "Модели"
 
 
 class Contractor(models.Model):
@@ -26,6 +34,11 @@ class Contractor(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Поставщики"
+        verbose_name_plural = "Поставщики"
+        ordering = ['inn']
+
 
 class Manufacturer(models.Model):
     name = models.CharField("Производитель", max_length=100)
@@ -36,6 +49,11 @@ class Manufacturer(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Производители"
+        verbose_name_plural = "Производители"
+        ordering = ['inn']
+
 
 class Category(models.Model):
     name = models.CharField("Наименование", max_length=150, db_index=True)
@@ -43,6 +61,10 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "Категории"
+        verbose_name_plural = "Категории"
 
     def get_absolute_url(self):
         return reverse('select', kwargs={'cat_slag': self.slug})
@@ -65,6 +87,11 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Товары"
+        verbose_name_plural = "Товары"
+        ordering = ['article', 'name', 'amount', 'manufacturer', 'contractor', 'brand', 'model', 'category']
+
     def get_absolute_url(self):
         return reverse('product', kwargs={'product_id': self.pk})
 
@@ -79,6 +106,11 @@ class Client(models.Model):
     def __str__(self):
         return self.first_name
 
+    class Meta:
+        verbose_name = "Клиенты"
+        verbose_name_plural = "Клиенты"
+        ordering = ['first_name', 'last_name']
+
 
 class Order(models.Model):
     client = models.ForeignKey(Client, on_delete=models.PROTECT)
@@ -86,6 +118,11 @@ class Order(models.Model):
 
     def __str__(self):
         return self.client
+
+    class Meta:
+        verbose_name = "Заказы"
+        verbose_name_plural = "Заказы"
+        ordering = ['date_order', 'id']
 
 
 class Order_Item(models.Model):
@@ -95,3 +132,8 @@ class Order_Item(models.Model):
 
     def __str__(self):
         return self.order
+
+    class Meta:
+        verbose_name = "Товары в заказах"
+        verbose_name_plural = "Товары в заказах"
+        ordering = ['order', 'id']

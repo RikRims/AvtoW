@@ -4,11 +4,11 @@
 <form action="{% url 'home' %}" method="post">
     <ul class="list-product">
 		<li>
-			<h1>{{name}}</h1>
-			{% if foto %}
-				<p><img class="img-article-left" src="{{foto.url}}"></p>
+			<h1>{{product.name}}</h1>
+			{% if product.foto %}
+				<p><img class="img-product-left" src="{{product.foto.url}}"></p>
 			{% endif %}
-			<p>{{description|linebreaks}}</p>
+			<p>{{product.description|linebreaks}}</p>
 		</li>
 	</ul>
 </form>
