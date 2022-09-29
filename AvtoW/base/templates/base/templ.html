@@ -20,7 +20,8 @@
 	{% if not forloop.last %}
 			<li><a href="{% url m.upl_name %}">{{m.title}}</a></li>
 	{% else %}
-			<li class="last"><a href="{% url m.upl_name %}">{{m.title}}</a></li>
+			<li class="last"><a href="{% url 'register' %}">Регистрация</a> | <a href="{% url 'login' %}">Войти</a>
+			</li>
 	{% endif %}
 {% endfor %}
 			</ul>
@@ -39,7 +40,15 @@
 		{% else %}
 			<li><a href="{% url 'home' %}">Все категории</a></li>
 		{% endif %}
-		{% show_categories selected=selected %}
+		{% for c in cats %}
+			{% if c.product__count > 0 %}
+				{% if c == selected %}
+					<li class="selected">{{c.name}}</li>
+				{% else %}
+					<li><a href="{{ c.get_absolute_url }}">{{c.name}}</a></li>
+				{% endif %}
+			{% endif %}
+		{% endfor %}
 	</ul>
 </td>
 <!-- Конец Sidebar'а -->
