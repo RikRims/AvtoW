@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 
@@ -93,31 +94,18 @@ class Product(models.Model):
         ordering = ['article', 'name', 'amount', 'manufacturer', 'contractor', 'brand', 'model', 'category']
 
     def get_absolute_url(self):
-        return reverse('product', kwargs={'product_id': self.pk})
-
-
-class Client(models.Model):
-    first_name = models.CharField("Имя", max_length=25)
-    last_name = models.CharField("Фамилия", max_length=25)
-    address = models.CharField("Адрес", max_length=250)
-    phone = models.CharField("Номер телефона", max_length=15, unique=True)
-    email = models.EmailField(unique=True)
-
-    def __str__(self):
-        return self.first_name
-
-    class Meta:
-        verbose_name = "Клиенты"
-        verbose_name_plural = "Клиенты"
-        ordering = ['first_name', 'last_name']
+        return reverse('product', kwargs={'product_id': self.slug})
 
 
 class Order(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.PROTECT)
+    client = models.ForeignKey(User, on_delete=models.PROTECT)
     date_order = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.client
+        return self.client.username
+
+    def get_absolute_url(self):
+        return reverse('orders', kwargs={'order_id': self.pk})
 
     class Meta:
         verbose_name = "Заказы"
@@ -131,7 +119,7 @@ class Order_Item(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name="Заказ")
 
     def __str__(self):
-        return self.order
+        return self.order.client.username
 
     class Meta:
         verbose_name = "Товары в заказах"

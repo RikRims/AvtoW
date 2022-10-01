@@ -1,0 +1,17 @@
+{% extends 'base/templ.html' %}
+
+{% block content %}
+<h1>Мои заказы</h1>
+<form action="{% url 'home' %}" method="post">
+    <ul class="list-product">
+		{% for el in orders %}
+			<li>
+				<h2>{{el.client}}</h2>
+				<p>{{el.date_order}}</p>
+				<div class="clear"></div>
+				<p class="link-read-post"><a href="{{ el.get_absolute_url }}">Открыть</a></p>
+			</li>
+		{% endfor %}
+	</ul>
+</form>
+{% endblock %}

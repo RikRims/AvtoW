@@ -1,11 +1,18 @@
-from django.shortcuts import render
+from django.contrib.auth import logout, login, authenticate
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import request
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import *
-#для авторизации
-from django.contrib.auth.mixins import LoginRequiredMixin
 from .form import RegisterUserForm
 from .utils import *
 from .models import *
+
+menu = [{'title': "Мои заказы", 'upl_name': "orderlist"},
+        {'title': "О нас", 'upl_name': "about"},
+        {'title': "Регистрация", 'upl_name': "login"}]
 
 
 class homelist(DataMixin, ListView):
@@ -17,6 +24,20 @@ class homelist(DataMixin, ListView):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title='AvtoW')
         return dict(list(context.items()) + list(c_def.items()))
+
+
+class orderlist(LoginRequiredMixin, DataMixin, ListView):
+    model = Order
+    template_name = 'base/orders.html'
+    context_object_name = 'orders'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Мои заказы')
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def get_queryset(self):
+        return Order.objects.filter(client=self.request.user)
 
 
 class showCategory(DataMixin, ListView):
@@ -38,13 +59,20 @@ class showCategory(DataMixin, ListView):
 class detailproduct(DataMixin, DetailView):
     model = Product
     template_name = 'base/detailProduct.html'
-    pk_url_kwarg = 'product_id'
+    slug_url_kwarg = 'product_id'
     context_object_name = 'product'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title=context['product'])
         return dict(list(context.items()) + list(c_def.items()))
+
+
+def detailorders(request, order_id):
+    orders = Order.objects.filter(pk=order_id)
+    order_items = Order_Item.objects.all()
+    cats = Category.objects.annotate(Count('product'))
+    return render(request, 'base/detailorders.html', {'orders': orders, 'order_items': order_items, 'menu': menu, 'cats': cats})
 
 
 class RegisterUser(DataMixin, CreateView):
@@ -57,10 +85,29 @@ class RegisterUser(DataMixin, CreateView):
         c_def = self.get_user_context(title="Регистрация")
         return dict(list(context.items()) + list(c_def.items()))
 
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect('home')
+
 
 def about(request):
     return render(request, 'base/about.html')
 
 
-def login(request):
-    return render(request, 'base/login.html')
+class LoginUser(DataMixin, LoginView):
+    form_class = AuthenticationForm
+    template_name = 'base/login.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Авторизация")
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def get_success_url(self):
+        return reverse_lazy('home')
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('login')

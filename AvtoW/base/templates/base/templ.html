@@ -1,5 +1,4 @@
 {% load static %}
-{% load base_tags %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,8 +19,11 @@
 	{% if not forloop.last %}
 			<li><a href="{% url m.upl_name %}">{{m.title}}</a></li>
 	{% else %}
-			<li class="last"><a href="{% url 'register' %}">Регистрация</a> | <a href="{% url 'login' %}">Войти</a>
-			</li>
+			{% if request.user.is_authenticated %}
+				<li class="last"> {{user.username}} | <a href="{% url 'logout' %}">Выйти</a></li>
+				{% else %}
+				<li class="last"><a href="{% url 'register' %}">Регистрация</a> | <a href="{% url 'login' %}">Войти</a></li>
+				{% endif %}
 	{% endif %}
 {% endfor %}
 			</ul>

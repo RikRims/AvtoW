@@ -1,0 +1,19 @@
+{% extends 'base/templ.html' %}
+
+{% block content %}
+<form action="{% url 'home' %}" method="post">
+    <ul class="list-product">
+		<li>
+			{% for o in orders %}
+				<h1>{{o.client}}</h1>
+				<p>{{o.date_order}}</p>
+				{% for oi in order_items %}
+					{% if oi.order == o %}
+						<p>{{oi.product}} {{oi.amount}}</p>
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+		</li>
+	</ul>
+</form>
+{% endblock %}

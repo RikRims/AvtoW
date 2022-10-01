@@ -41,12 +41,6 @@ class BrandAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-class ClientAdmin(admin.ModelAdmin):
-    list_display = ('id', 'first_name', 'last_name', 'address', 'phone', 'email')
-    list_display_links = ('id', 'first_name', 'last_name')
-    search_fields = ('first_name', 'last_name')
-
-
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('id', 'client', 'date_order')
     list_display_links = ('id', 'client')
@@ -65,6 +59,5 @@ admin.site.register(Manufacturer, ManufacturerAdmin)
 admin.site.register(Contractor, ContractorAdmin)
 admin.site.register(Model, ModelAdmin)
 admin.site.register(Brand, BrandAdmin)
-admin.site.register(Client, ClientAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Order_Item, Order_ItemAdmin)
