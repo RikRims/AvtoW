@@ -6,8 +6,9 @@
     <ul class="list-product">
 		{% for el in orders %}
 			<li>
-				<h2>{{el.client}}</h2>
-				<p>{{el.date_order}}</p>
+				<h2>Заказ: {{el.client}}</h2>
+				<p>Дата заказа: {{el.date_order}}</p>
+				<p>Статус заказа: {{el.status}}</p>
 				<div class="clear"></div>
 				<p class="link-read-post"><a href="{{ el.get_absolute_url }}">Открыть</a></p>
 			</li>

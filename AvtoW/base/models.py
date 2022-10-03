@@ -98,8 +98,15 @@ class Product(models.Model):
 
 
 class Order(models.Model):
+    NEW = 'новый'
+    PAID = 'оплачено'
+    VARIANTS_STATUS = [
+        (NEW, 'новый'),
+        (PAID, 'оплачено')
+    ]
     client = models.ForeignKey(User, on_delete=models.PROTECT)
     date_order = models.DateTimeField(auto_now_add=True)
+    status = models.CharField("Статус заказа", max_length=10, choices=VARIANTS_STATUS, default=NEW)
 
     def __str__(self):
         return self.client.username

@@ -1,19 +1,43 @@
 {% extends 'base/templ.html' %}
+{% load mathfilters %}
 
 {% block content %}
 <form action="{% url 'home' %}" method="post">
-    <ul class="list-product">
-		<li>
-			{% for o in orders %}
-				<h1>{{o.client}}</h1>
-				<p>{{o.date_order}}</p>
+	<table class="table" border="1" cellspacing="0">
+		<ul class="list-product">
+			<li>
 				{% for oi in order_items %}
-					{% if oi.order == o %}
-						<p>{{oi.product}} {{oi.amount}}</p>
-					{% endif %}
+					<caption><div class="product-panel">
+						<p class="first">{{oi.order.client}}</p><br>
+						<p class="first">Статус заказа: {{oi.order.status}}</p>
+						<p class="last">Дата: {{oi.order.date_order}}</p>
+					</div></caption>
 				{% endfor %}
-			{% endfor %}
-		</li>
-	</ul>
+				<tr>
+					<th>Наименование</th>
+					<th>Артикул</th>
+					<th>Количество</th>
+					<th>Цена за ед</th>
+					<th>Итого</th>
+				</tr>
+				{% for oi in order_items %}
+				<tr>
+					<td>{{oi.product}}</td>
+					<td>{{oi.product.article}}</td>
+					<td>{{oi.amount}}</td>
+					<td>{{oi.product.price}}</td>
+					<td>{{oi.product.price|mul:oi.amount}}</td>
+				</tr>
+				{% endfor %}
+				<tr>
+					<td>Итого</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>{{summ}}</td>
+				</tr>
+			</li>
+		</ul>
+	</table>
 </form>
 {% endblock %}

@@ -69,10 +69,14 @@ class detailproduct(DataMixin, DetailView):
 
 
 def detailorders(request, order_id):
-    orders = Order.objects.filter(pk=order_id)
-    order_items = Order_Item.objects.all()
+    order_items = Order_Item.objects.filter(order=order_id)
     cats = Category.objects.annotate(Count('product'))
-    return render(request, 'base/detailorders.html', {'orders': orders, 'order_items': order_items, 'menu': menu, 'cats': cats})
+    stop = 1
+    return render(request, 'base/detailorders.html', {'orders': ord,
+                                                      'order_items': order_items,
+                                                      'menu': menu,
+                                                      'cats': cats,
+                                                      'stop': stop})
 
 
 class RegisterUser(DataMixin, CreateView):
