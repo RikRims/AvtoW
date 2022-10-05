@@ -1,11 +1,11 @@
-from django.contrib.auth import logout, login, authenticate
+from django.contrib.auth import logout, login
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import request
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import *
+from django.db.models import Sum
 from .form import RegisterUserForm
 from .utils import *
 from .models import *
@@ -69,14 +69,14 @@ class detailproduct(DataMixin, DetailView):
 
 
 def detailorders(request, order_id):
+    all_sum = Order_Item.objects.filter(order=order_id).aggregate(all_sum=Sum('product__price'))
     order_items = Order_Item.objects.filter(order=order_id)
     cats = Category.objects.annotate(Count('product'))
-    stop = 1
     return render(request, 'base/detailorders.html', {'orders': ord,
                                                       'order_items': order_items,
                                                       'menu': menu,
                                                       'cats': cats,
-                                                      'stop': stop})
+                                                      'all_sum': all_sum})
 
 
 class RegisterUser(DataMixin, CreateView):
@@ -99,6 +99,10 @@ def about(request):
     return render(request, 'base/about.html')
 
 
+def otchet(request):
+    return render(request, 'base/otchet.html')
+
+
 class LoginUser(DataMixin, LoginView):
     form_class = AuthenticationForm
     template_name = 'base/login.html'
@@ -115,3 +119,36 @@ class LoginUser(DataMixin, LoginView):
 def logout_user(request):
     logout(request)
     return redirect('login')
+
+
+def saveorder(request, prod_id):
+    new_order_item = Order_Item()
+    product = Product.objects.get(pk=prod_id)
+    if not Order.objects.filter(client=request.user).exists():
+        new_order = Order()
+        new_order.client = request.user
+        new_order.save()
+        new_order_item.product = product
+        new_order_item.order = new_order
+        new_order_item.amount = 1
+        new_order_item.save()
+    else:
+        order = Order.objects.filter(client=request.user).latest('date_order')
+        if order.status == 'новый':
+            new_order = order
+        else:
+            new_order = Order()
+            new_order.client = request.user
+            new_order.save()
+        new_order_item.product = product
+        new_order_item.order = new_order
+        new_order_item.amount = 1
+        new_order_item.save()
+    return redirect('home')
+
+
+def coin(request):
+    order = Order.objects.filter(client=request.user).latest('date_order')
+    order.status = 'оплачено'
+    order.save()
+    return redirect('orderlist')

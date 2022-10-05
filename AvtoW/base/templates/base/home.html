@@ -15,7 +15,8 @@
 				</p>
 				<p>{{el.price}} руб.</p>
 				<div class="clear"></div>
-				<p class="link-read-post"><a href="{{ el.get_absolute_url }}">Открыть</a></p>
+				<p class="link-read-post"> {% if request.user.is_authenticated %} <a href="{{el.id}}">Купить</a>
+					{% endif %} <a href="{{ el.get_absolute_url }}">Открыть</a></p>
 			</li>
 		{% endfor %}
 	</ul>

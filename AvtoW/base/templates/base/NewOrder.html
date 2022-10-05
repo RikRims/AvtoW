@@ -1,5 +1,4 @@
 {% extends 'base/templ.html' %}
-{% load mathfilters %}
 
 {% block content %}
 <form action="{% url 'home' %}" method="post">
@@ -8,7 +7,7 @@
 			<li>
 				{% for oi in order_items %}
 					<caption><div class="product-panel">
-						<p class="first">{{oi.order.client}} <p class="link-read-post"><a href="{% url 'coin' %}">Оплатить</a></p></p>
+						<p class="first">{{oi.order.client}}</p><br>
 						<p class="first">Статус заказа: {{oi.order.status}}</p>
 						<p class="last">Дата: {{oi.order.date_order}}</p>
 					</div></caption>
@@ -26,7 +25,7 @@
 					<td>{{oi.product.article}}</td>
 					<td>{{oi.amount}}</td>
 					<td>{{oi.product.price}}</td>
-					<td><script> var sum, i; i = {{oi.get_sum}}; sum+=i </script>{{oi.get_sum}}</td>
+					<td>{{oi.get_sum}}</td>
 				</tr>
 				{% endfor %}
 				<tr>

@@ -437,3 +437,7 @@ ul.lang-list li a:hover {color: #fdc073;}
 	border: 1px solid #dddddd;
 	padding: 5px;
 }
+
+.basket {
+float: right;
+}

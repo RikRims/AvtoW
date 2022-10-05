@@ -132,3 +132,6 @@ class Order_Item(models.Model):
         verbose_name = "Товары в заказах"
         verbose_name_plural = "Товары в заказах"
         ordering = ['order', 'id']
+
+    def get_sum(self):
+        return self.amount * self.product.price

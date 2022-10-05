@@ -9,6 +9,9 @@
 				<p><img class="img-product-left" src="{{product.foto.url}}"></p>
 			{% endif %}
 			<p>{{product.description|linebreaks}}</p>
+			{% if request.user.is_authenticated %}
+				<p class="link-read-post"><a href="{% url 'saveorder' product.id %}">Купить</a></p>
+			{% endif %}
 		</li>
 	</ul>
 </form>
